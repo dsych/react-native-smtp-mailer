@@ -1,6 +1,6 @@
 
 import { NativeModules } from 'react-native';
 
-const { RNSmtpMailer } = NativeModules;
+const { RNSmtpMailer, RNImapMailer } = NativeModules;
 
-export default RNSmtpMailer;
+export { RNSmtpMailer, RNImapMailer };
