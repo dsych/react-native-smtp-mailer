@@ -70,8 +70,10 @@ public class RNImapMailerModule extends ReactContextBaseJavaModule {
 
                 } catch (NoSuchProviderException e) {
                     e.printStackTrace();
+                    promise.reject(e.getMessage());
                 } catch (MessagingException e) {
                     e.printStackTrace();
+                    promise.reject(e.getMessage());
                 }
 
             }
@@ -125,7 +127,7 @@ public class RNImapMailerModule extends ReactContextBaseJavaModule {
                     System.out.println("No of Unread Messages : " + folder.getUnreadMessageCount());
                     System.out.println(messages.length);
 
-                    for (int i = 0; i < messages.length; i++) {
+                    for (int i = 0; i < messages.length && i < 20; i++) {
 
                         WritableNativeMap tmp = new WritableNativeMap();
 
@@ -158,6 +160,7 @@ public class RNImapMailerModule extends ReactContextBaseJavaModule {
                         System.out.println(msg.getContentType());
 
                     }
+                    obj.putArray("messages", msgs);
                 } catch (Exception e) {
                     e.printStackTrace();
                     promise.reject(e.getMessage());
