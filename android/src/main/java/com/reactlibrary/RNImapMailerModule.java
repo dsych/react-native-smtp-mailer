@@ -8,6 +8,7 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.ReadableNativeMap;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeArray;
 import com.facebook.react.bridge.WritableNativeMap;
@@ -107,7 +108,7 @@ public class RNImapMailerModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    void checkMail(final ReadableMap obj, final Promise promise) {
+    void checkMail(final ReadableMap config, final Promise promise) {
         AsyncTask.execute(new Runnable() {
 
             String subject = null;
@@ -126,7 +127,7 @@ public class RNImapMailerModule extends ReactContextBaseJavaModule {
                     System.out.println("No of Messages : " + folder.getMessageCount());
                     System.out.println("No of Unread Messages : " + folder.getUnreadMessageCount());
 
-                    int limit = !obj.isNull("messageLimit") ? obj.getInt("messageLimit") : total;
+                    int limit = config != null && config.hasKey("messageLimit") ? config.getInt("messageLimit") : total;
 
                     for (int i = 0; i < limit; i++) {
                         WritableNativeMap tmp = new WritableNativeMap();
@@ -171,6 +172,11 @@ public class RNImapMailerModule extends ReactContextBaseJavaModule {
             }
         });
 
+    }
+
+    @ReactMethod
+    public void checkMail(final Promise promise) {
+        this.checkMail(null, promise);
     }
 
     @Override
