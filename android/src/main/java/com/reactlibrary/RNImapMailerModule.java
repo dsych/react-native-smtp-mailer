@@ -1,6 +1,7 @@
 package com.reactlibrary;
 
 import android.os.AsyncTask;
+import javax.mail.Message;
 
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -106,7 +107,7 @@ public class RNImapMailerModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    void checkMail(final Promise promise) {
+    void checkMail(final ReadableMap obj, final Promise promise) {
         AsyncTask.execute(new Runnable() {
 
             String subject = null;
@@ -118,22 +119,22 @@ public class RNImapMailerModule extends ReactContextBaseJavaModule {
                 WritableNativeMap obj = new WritableNativeMap();
                 WritableNativeArray msgs = new WritableNativeArray();
                 try {
-
-                    Message[] messages = folder.getMessages();
-                    obj.putInt("noOfMessages", folder.getMessageCount());
+                    int total = folder.getMessageCount();
+                    obj.putInt("noOfMessages", total);
                     obj.putInt("noOfUnreadMessages", folder.getUnreadMessageCount());
 
                     System.out.println("No of Messages : " + folder.getMessageCount());
                     System.out.println("No of Unread Messages : " + folder.getUnreadMessageCount());
-                    System.out.println(messages.length);
 
-                    for (int i = 0; i < messages.length && i < 20; i++) {
+                    int limit = !obj.isNull("messageLimit") ? obj.getInt("messageLimit") : total;
 
+                    for (int i = 0; i < limit; i++) {
                         WritableNativeMap tmp = new WritableNativeMap();
 
                         System.out.println("*****************************************************************************");
                         System.out.println("MESSAGE " + (i + 1) + ":");
-                        Message msg = messages[i];
+                        // Message msg = messages[i];
+                        Message msg = folder.getMessage(total - i);
                         //System.out.println(msg.getMessageNumber());
                         //Object String;
                         //System.out.println(folder.getUID(msg)
