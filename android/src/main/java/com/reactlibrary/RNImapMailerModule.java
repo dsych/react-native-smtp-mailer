@@ -174,11 +174,6 @@ public class RNImapMailerModule extends ReactContextBaseJavaModule {
 
     }
 
-    @ReactMethod
-    public void checkMail(final Promise promise) {
-        this.checkMail(null, promise);
-    }
-
     @Override
     public String getName() {
         return "RNImapMailer";
